@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aegis - Downloads</title>
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --surface: #ffffff;
+    --text: #1c2330;
+    --muted: #6b7482;
+    --border: #e1e5eb;
+    --accent: #3b5bdb;
+    --beta: #e08a00;
+    --alpha: #c2255c;
+    --hero-from: #eef2ff;
+    --hero-to: #f6f7f9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12151b;
+      --surface: #1b2029;
+      --text: #e8ebf0;
+      --muted: #9aa3b2;
+      --border: #2a313d;
+      --hero-from: #1a2036;
+      --hero-to: #12151b;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+  }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+
+  /* Nav */
+  header.nav {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; }
+  .logo-mark {
+    width: 26px; height: 26px; border-radius: 7px;
+    background: linear-gradient(135deg, var(--accent), #7c5cff);
+  }
+  .nav nav { display: flex; gap: 22px; font-size: 0.92rem; color: var(--muted); }
+  .nav nav a:hover { color: var(--text); }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(180deg, var(--hero-from), var(--hero-to));
+    padding: 72px 0 56px;
+    text-align: center;
+  }
+  .pill {
+    display: inline-block; padding: 4px 12px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--border);
+    font-size: 0.8rem; color: var(--muted); margin-bottom: 18px;
+  }
+  .hero h1 { margin: 0 0 12px; font-size: clamp(2rem, 6vw, 3rem); letter-spacing: -0.02em; }
+  .hero p { margin: 0 auto 28px; max-width: 520px; color: var(--muted); font-size: 1.05rem; }
+  .cta {
+    display: inline-block; padding: 12px 22px; border-radius: 10px;
+    background: var(--accent); color: #fff; font-weight: 600;
+    transition: filter 0.15s ease;
+  }
+  .cta:hover { filter: brightness(1.1); }
+
+  /* Downloads */
+  section.downloads { padding: 56px 0; }
+  .downloads h2 { margin: 0 0 6px; font-size: 1.6rem; text-align: center; }
+  .downloads .sub { margin: 0 0 32px; text-align: center; color: var(--muted); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 24px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    display: flex; flex-direction: column;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); }
+  .tag {
+    align-self: flex-start; padding: 3px 10px; border-radius: 999px;
+    font-size: 0.75rem; font-weight: 700; color: #fff; margin-bottom: 14px;
+  }
+  .card h3 { margin: 0 0 4px; font-size: 1.2rem; }
+  .card p { margin: 0 0 20px; color: var(--muted); font-size: 0.92rem; flex: 1; }
+  .btn {
+    display: block; width: 100%; padding: 11px 14px; border: 0; border-radius: 9px;
+    font: inherit; font-weight: 600; color: #fff; cursor: pointer;
+    transition: filter 0.15s ease, transform 0.1s ease;
+  }
+  .btn:hover { filter: brightness(1.08); }
+  .btn:active { transform: translateY(1px); }
+  .stable .tag, .stable .btn { background: var(--accent); }
+  .beta   .tag, .beta   .btn { background: var(--beta); }
+  .alpha  .tag, .alpha  .btn { background: var(--alpha); }
+
+  /* Footer */
+  footer { border-top: 1px solid var(--border); padding: 28px 0; color: var(--muted); font-size: 0.85rem; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; }
+
+  @media (max-width: 520px) { .nav nav { gap: 14px; } }
+  .btn { text-align: center; }
+</style>
+
+<!-- ===== EDIT RELEASES HERE ===== -->
+<script>
+  // Download links are built as BASE_URL + version (+ "-stage" if stage is set) + FILE_EXT
+  // e.g. /downloads/0.3.7.upd, /downloads/0.3.7-beta.upd, /downloads/0.3.7-alpha.upd
+  const BASE_URL = "/downloads/";
+  const FILE_EXT = ".upd";
+
+  const RELEASES = {
+    stable: { version: "0.3.7", stage: null },
+    beta:   { version: "0.3.7", stage: "beta" },
+    alpha:  { version: "0.3.7", stage: "alpha" }
+  };
+</script>
+<!-- ============================== -->
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a href="#" class="logo"><span class="logo-mark"></span>Aegis</a>
+    <nav>
+      <a href="#downloads">Downloads</a>
+      <a href="#">Docs</a>
+      <a href="#">Changelog</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="pill">Latest release: <span data-v="stable"></span></span>
+    <h1>Get Aegis</h1>
+    <p>Download the latest version of Aegis, or try the beta and alpha builds to see what's coming next.</p>
+    <a href="#downloads" class="cta">Choose a version</a>
+  </div>
+</section>
+
+<section class="downloads" id="downloads">
+  <div class="wrap">
+    <h2>Downloads</h2>
+    <p class="sub">Pick the release channel that fits you.</p>
+    <div class="grid">
+      <article class="card stable">
+        <span class="tag">Stable</span>
+        <h3>Aegis <span data-v="stable"></span></h3>
+        <p>The latest stable release. Recommended for everyday use.</p>
+        <a class="btn" data-link="stable">Download Aegis <span data-v="stable"></span></a>
+      </article>
+      <article class="card beta">
+        <span class="tag">Beta</span>
+        <h3>Aegis <span data-v="beta"></span> Beta</h3>
+        <p>Feature-complete preview builds. Mostly stable, may have rough edges.</p>
+        <a class="btn" data-link="beta">Download Aegis <span data-v="beta"></span> Beta</a>
+      </article>
+      <article class="card alpha">
+        <span class="tag">Alpha</span>
+        <h3>Aegis <span data-v="alpha"></span> Alpha</h3>
+        <p>Earliest builds with the newest changes. Expect bugs.</p>
+        <a class="btn" data-link="alpha">Download Aegis <span data-v="alpha"></span> Alpha</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 Prismonian Administrative Solutions</span>
+    <span>Aegis <span data-v="stable"></span></span>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll("[data-v]").forEach(function (el) {
+    el.textContent = RELEASES[el.dataset.v].version;
+  });
+  document.querySelectorAll("[data-link]").forEach(function (el) {
+    var r = RELEASES[el.dataset.link];
+    el.href = BASE_URL + r.version + (r.stage ? "-" + r.stage : "") + FILE_EXT;
+  });
+</script>
+
+</body>
+</html>
